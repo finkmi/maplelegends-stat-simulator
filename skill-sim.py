@@ -32,6 +32,15 @@ class Character:
             self.stale_ap_mp_gain = 2
             self.mp_lost_from_resetting = 4
 
+        elif self.job == "bowman":
+            self.lvl_up_hp_gain_limits = (20, 24)
+            self.lvl_up_mp_gain_limits = (14, 16)
+            self.fresh_ap_hp_gain_limits = (16, 20)
+            self.fresh_ap_mp_gain = 10
+            self.stale_ap_hp_gain = 16
+            self.stale_ap_mp_gain = 10
+            self.mp_lost_from_resetting = 12
+
         elif self.job == "buccaneer":
             self.lvl_up_hp_gain_limits = (22, 28)
             self.lvl_up_mp_gain_limits = (18, 23)
@@ -122,6 +131,14 @@ class Character:
             if self.level >= 15:
                 self.lvl_up_hp_gain_limits = (64, 68)
                 self.fresh_ap_hp_gain_limits = (50, 54)
+
+        if self.job == "bowman":
+            # Job advancement Bonus
+            if self.level == 30:
+                self.hp += random.randint(100, 150) + random.randint(25, 50)
+            if self.level == 70:
+                self.hp += random.randint(300, 350)
+                self.mp += random.randint(150, 200)
 
         if self.job == "buccaneer":
             # Job advancement Bonus
@@ -229,6 +246,9 @@ class Character:
             return 4 * self.level + 55
         elif self.job == "page":
             return 4 * self.level + 155
+
+        elif self.job == "bowman":
+            return 14 * self.level +  135
 
         elif self.job == "buccaneer":
             return 18 * self.level + 95 
