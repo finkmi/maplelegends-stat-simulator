@@ -1,7 +1,7 @@
 import random
 
 class Character:
-    def __init__(self, job, level, hp, mp, str, dex, luk, int, fresh_ap, stale_ap, int_from_items):
+    def __init__(self, job, level, hp, mp, str, dex, luk, int, fresh_ap, stale_ap, ap_in_hp_mp_pool, int_from_items):
         self.job = job
         self.level = level
         self.hp = hp
@@ -12,6 +12,7 @@ class Character:
         self.int = int
         self.fresh_ap = fresh_ap
         self.stale_ap = stale_ap
+        self.ap_in_hp_mp_pool = ap_in_hp_mp_pool
         self.resets_used = 0
 
         if self.job == "magician":
@@ -191,8 +192,10 @@ class Character:
                 self.int += 1
             elif stat == 'hp':
                 self.hp += random.randint(self.fresh_ap_hp_gain_limits[0], self.fresh_ap_hp_gain_limits[1])
+                self.ap_in_hp_mp_pool += 1
             elif stat == 'mp':
                 self.mp += self.fresh_ap_mp_gain + int(self.int / 10)
+                self.ap_in_hp_mp_pool += 1
 
             self.fresh_ap -= 1
 
@@ -217,6 +220,7 @@ class Character:
 
             self.stale_ap -= 1
 
+    # TODO: Should stale points put in to HP/MP pool affect the pool count? Would we then need to track where stale points were generated from
     def sim_ap_reset(self, stat, val):
         self.minimum_mp = self.calculate_minimum_mp()
         for i in range(val):
@@ -244,7 +248,11 @@ class Character:
                 if self.mp - self.mp_lost_from_resetting < self.minimum_mp:
                     print(f'AP reset #{i}: Already at minimum MP')
                     return
+                if self.ap_in_hp_mp_pool == 0:
+                    print("No AP in HP/MP pool to pull from")
+                    return
                 self.mp -= self.mp_lost_from_resetting
+                self.ap_in_hp_mp_pool -= 1
 
             self.stale_ap += 1
             self.resets_used += 1
@@ -276,7 +284,7 @@ class Character:
     # set val to MW level (only supports 10 and 20)
     def calculate_total_int_with_mw(self, val):
         if val <= 10:
-            return int(self.int + self.int_from_items + ((self.int + self.int_from_items)*0.05))
+            return int(self.int + self.int_from_items + int((self.int + self.int_from_items)*0.05))
 
         elif val >= 20:
-            return int(self.int + self.int_from_items + ((self.int + self.int_from_items)*0.10))
+            return int(self.int + self.int_from_items + int((self.int + self.int_from_items)*0.10))

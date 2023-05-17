@@ -1,7 +1,7 @@
 from mscharacter import Character
 
 def buccTo30kPlan():
-    c = Character("buccaneer", 62, 3071, 1674, 185, 26, 4, 110, 5, 0, 68)
+    c = Character("buccaneer", 62, 3071, 1674, 185, 26, 4, 110, 5, 0, 0, 68)
 
     print("Phinkz currently:")
     print(str(c))
@@ -36,8 +36,8 @@ def buccTo30kPlan():
     while c.mp - 16 >= c.minimum_mp and c.level < 150:
         c.level_up()
         c.add_fresh_ap("hp", 5)
-        # c.sim_ap_reset("mp", 5)
-        # c.add_stale_ap("str", 5)
+        c.sim_ap_reset("mp", 5)
+        c.add_stale_ap("str", 5)
     print(str(c))
     
     print("At 150 we can start removing INT whenever")
@@ -62,50 +62,12 @@ def buccTo30kPlan():
         c.level_up()
         c.add_fresh_ap("str", 5)
 
-    while c.mp - 16 >= c.minimum_mp:
+    print(f'Points in HP/MP pool {c.ap_in_hp_mp_pool}')
+
+    while c.mp - 16 >= c.minimum_mp and c.ap_in_hp_mp_pool > 0:
         c.sim_ap_reset("mp", 1)
         c.add_stale_ap("str", 1)
 
-    print(str(c))
-
-
-def buccLessWork():
-    c = Character("buccaneer", 62, 3071, 1674, 185, 26, 4, 110, 5, 0, 68)
-    print(str(c))
-
-
-    start_val = 20
-    c.sim_ap_reset("str", start_val)
-    c.add_stale_ap("int", start_val)
-
-    for i in range(5):
-        # c.level_up()
-        c.add_fresh_ap("hp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("int", 5)
-    print(str(c))
-
-    for i in range(25):
-        c.level_up()
-        c.add_fresh_ap("mp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("int", 5)
-    print(str(c))
-
-    while c.mp - 16 >= c.minimum_mp and c.level < 200:
-        c.level_up()
-        c.add_fresh_ap("hp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("str", 5)
-    print(str(c))
-
-    while(c.int > 4):
-        c.sim_ap_reset("int", 1)
-        c.add_stale_ap("str", 1)
-    print(str(c))
-
-    while(c.level < 200):
-        c.level_up()
     print(str(c))
 
 
