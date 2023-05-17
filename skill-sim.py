@@ -25,7 +25,8 @@ class Character:
         ret += f"Level: {self.level}\n"
         ret += f"Fresh AP: {self.fresh_ap}\n"
         ret += f"Stale AP: {self.stale_ap}\n"
-        ret += f"Resets used: {self.resets_used}\n"
+        ret += f"Resets used: {self.resets_used} ({self.resets_used * 3100} NX)\n"
+        ret += f"{(self.resets_used * 3100)/5000} days of voting\n"
         ret += f"\n"
         ret += f"HP: {self.hp}\n"
         ret += f"MP: {self.mp}\n"
@@ -37,7 +38,6 @@ class Character:
         ret += f"INT: {self.int + self.int_from_items} ({self.int}+{self.int_from_items})\n"
         ret += f"LUK: {self.luk}\n"
         ret += '=============================================='
-        # return f"\nLevel: {self.level}\nFresh AP: {self.fresh_ap}\nStale AP: {self.stale_ap}\n\nHP: {self.hp}\nMP: {self.mp}\n\nSTR: {self.str}\nDEX: {self.dex}\nINT: {self.int + self.int_from_items} ({self.int}+{self.int_from_items})\nLUK: {self.luk}"
         return ret
 
     def level_up(self):
@@ -51,9 +51,11 @@ class Character:
 
         # Not accounting for job
         # Not accounting for skills (eg: brawler assumes MaxHp skill leveled)
+        total_int_w_mw10 = int(self.int + self.int_from_items + ((self.int + self.int_from_items)*0.05))
 
-        self.hp += random.randint(22, 28)
-        self.mp += random.randint(18, 23) + int((self.int+self.int_from_items) / 10)
+        self.hp += random.randint(52, 58)
+#        self.mp += random.randint(18, 23) + int((self.int+self.int_from_items) / 10)
+        self.mp += random.randint(18, 23) + int(total_int_w_mw10 / 10)
 
     def add_fresh_ap(self, stat, val):
         for i in range(val):
@@ -138,68 +140,71 @@ class Character:
 
 
 def main():
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     c = Character("buccaneer", 62, 3071, 1674, 185, 26, 4, 110, 5, 0, 68)
     print(str(c))
-    # c.add_fresh_ap("hp", 5)
-    # c.sim_ap_reset("mp", 5)
-    # c.add_stale_ap("int", 5)
 
-    for i in range(10):
+    start_val = 20
+    c.sim_ap_reset("str", start_val)
+    c.add_stale_ap("int", start_val)
+    
+    c.add_fresh_ap("hp", 5)
+    c.sim_ap_reset("mp", 5)
+    c.add_stale_ap("int", 5)
+    print(str(c))
+
+
+    for i in range(5):
         c.level_up()
-        c.add_fresh_ap("int", 5)
-
-    for i in range(20):
+        c.add_fresh_ap("hp", 5)
+        c.sim_ap_reset("mp", 5)
+        c.add_stale_ap("int", 5)
+    print(str(c))
+        
+    for i in range(35):
         c.level_up()
         c.add_fresh_ap("mp", 5)
         c.sim_ap_reset("mp", 5)
         c.add_stale_ap("int", 5)
+    print(str(c))
+    
+#    for i in range(9):
+#        c.level_up()
+#        c.add_fresh_ap("mp", 5)
+#        c.sim_ap_reset("mp", 5)
+#        c.add_stale_ap("str", 5)
+#    print(str(c))
 
-    for i in range(30):
+    while c.mp - 16 >= c.minimum_mp and c.level < 150:
         c.level_up()
-        c.add_fresh_ap("mp", 5)
+        c.add_fresh_ap("hp", 5)
+        c.sim_ap_reset("mp", 5)
+        c.add_stale_ap("str", 5)
+    print(str(c))
+    
+    while(c.int > 4):
+        c.sim_ap_reset("int", 1)
+        c.add_stale_ap("str", 1)
+    print(str(c))
+    
+    while c.mp - 16 >= c.minimum_mp and c.level < 200:
+        c.level_up()
+        c.add_fresh_ap("hp", 5)
         c.sim_ap_reset("mp", 5)
         c.add_stale_ap("str", 5)
 
-    # print(str(c))
-
-    # for i in range(50):
-    #     c.level_up()
-    #     c.add_fresh_ap("hp", 5)
-    #     c.sim_ap_reset("mp", 5)
-    #     c.add_stale_ap("str", 5)
-
-    while c.level < 185:
-        c.level_up()
-
+        if c.level == 185:
+            print(str(c))
+            
     print(str(c))
 
-    # # Add base int to level 80
+        
 
+    while c.level < 200:
+        c.level_up()
+        c.add_fresh_ap("str", 5)
 
-    # for i in range(18):
-    #     c.level_up()
-    #     c.add_fresh_ap("int", 5)
-    # print(str(c))
-
-    # # MP wash 50 levels to level 130
-    # for i in range(30): 
-    #     c.level_up()
-    #     c.add_fresh_ap("mp", 5)
-    #     c.sim_ap_reset("mp", 5)
-    #     c.add_stale_ap("str", 5)
-    # print(str(c))
-
-    # for i in range(8):
-    #     c.sim_ap_reset("mp", 5)
-    # print(str(c))
-
-    # # Fresh HP washing
-    # for i in range(75):
-    #     c.level_up()
-    #     c.add_fresh_ap("hp", 5)
-    #     c.sim_ap_reset("mp", 5)
-    #     c.add_stale_ap("str", 5)
-    # print(str(c))
+    print(str(c))
 
 
 if __name__ == "__main__":
