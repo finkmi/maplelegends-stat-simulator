@@ -95,6 +95,8 @@ class Character:
         self.fresh_ap += 5
         self.minimum_mp = self.calculate_minimum_mp()
 
+        # TODO: Could I make a dicts, with {job: (hp limits)} and {job:
+        # (mplimits)} and more programatically set these values
         if self.job == "magician":
             # Job advancement Bonus
             if self.level == 30:
@@ -215,8 +217,10 @@ class Character:
                 self.int += 1
             elif stat == 'hp':
                 self.hp += self.stale_ap_hp_gain
+                self.ap_in_hp_mp_pool += 1
             elif stat == 'mp':
                 self.mp += self.stale_ap_mp_gain
+                self.ap_in_hp_mp_pool += 1
 
             self.stale_ap -= 1
 
