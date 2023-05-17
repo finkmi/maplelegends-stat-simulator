@@ -32,7 +32,7 @@ class Character:
             self.stale_ap_mp_gain = 2
             self.mp_lost_from_resetting = 4
 
-        elif self.job == "bowman" or "thief":
+        elif self.job == "bowman" or self.job == "thief":
             self.lvl_up_hp_gain_limits = (20, 24)
             self.lvl_up_mp_gain_limits = (14, 16)
             self.fresh_ap_hp_gain_limits = (16, 20)
@@ -74,8 +74,9 @@ class Character:
         ret += f"\n"
         ret += f"HP: {self.hp}\n"
         ret += f"MP: {self.mp}\n"
+        ret += f"Min MP: {self.minimum_mp}\n"
         ret += f"Excess MP: {self.mp - self.minimum_mp}\n"
-        ret += f"Washes Possible: {int((self.mp - self.minimum_mp)/self.mp_lost_from_resetting)} -- yields approx. {int((self.fresh_ap_hp_gain_limits[0] + self.fresh_ap_hp_gain_limits[1])/2)*(int((self.mp - self.minimum_mp)/16))} HP\n"
+        ret += f"Washes Possible: {int((self.mp - self.minimum_mp)/self.mp_lost_from_resetting)} -- yields approx. {int((self.fresh_ap_hp_gain_limits[0] + self.fresh_ap_hp_gain_limits[1])/2)*(int((self.mp - self.minimum_mp)/self.mp_lost_from_resetting))} HP\n"
         ret += f"\n"
         ret += f"STR: {self.str}\n"
         ret += f"DEX: {self.dex}\n"
@@ -141,7 +142,7 @@ class Character:
                 self.lvl_up_hp_gain_limits = (64, 68)
                 self.fresh_ap_hp_gain_limits = (50, 54)
 
-        if self.job == "bowman" or "thief":
+        if self.job == "bowman" or self.job == "thief":
             # Job advancement Bonus
             if self.level == 30:
                 self.hp += random.randint(100, 150) + random.randint(25, 50)
@@ -217,6 +218,7 @@ class Character:
             self.stale_ap -= 1
 
     def sim_ap_reset(self, stat, val):
+        self.minimum_mp = self.calculate_minimum_mp()
         for i in range(val):
             if stat == 'str':
                 if self.str <= 4:
@@ -264,10 +266,10 @@ class Character:
         elif self.job == "page":
             return 4 * self.level + 155
 
-        elif self.job == "bowman" or "thief":
+        elif self.job == "bowman" or self.job == "thief":
             return 14 * self.level +  135
 
-        elif self.job == "buccaneer" or "gunslinger":
+        elif self.job == "buccaneer" or self.job == "gunslinger":
             return 18 * self.level + 95 
         
 
@@ -278,127 +280,3 @@ class Character:
 
         elif val >= 20:
             return int(self.int + self.int_from_items + ((self.int + self.int_from_items)*0.10))
-
-
-
-def buccTo30kPlan():
-    c = Character("buccaneer", 62, 3071, 1674, 185, 26, 4, 110, 5, 0, 68)
-
-    print("Phinkz currently:")
-    print(str(c))
-    print("Start with moving 20 STR to INT and HP wash our 5 fresh AP")
-
-    start_val = 20
-    c.sim_ap_reset("str", start_val)
-    c.add_stale_ap("int", start_val)
-    
-    c.add_fresh_ap("hp", 5)
-    c.sim_ap_reset("mp", 5)
-    c.add_stale_ap("int", 5)
-    print(str(c))
-
-    print("For 5 levels HP wash moving points from MP to INT")
-    for i in range(5):
-        c.level_up()
-        c.add_fresh_ap("hp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("int", 5)
-    print(str(c))
-        
-    print("For 35 levels MP wash moving points from MP to INT")
-    for i in range(35):
-        c.level_up()
-        c.add_fresh_ap("mp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("int", 5)
-    print(str(c))
-
-    print("From level 102 to level 150 standard HP wash moving points from MP to STR")
-    while c.mp - 16 >= c.minimum_mp and c.level < 150:
-        c.level_up()
-        c.add_fresh_ap("hp", 5)
-        # c.sim_ap_reset("mp", 5)
-        # c.add_stale_ap("str", 5)
-    print(str(c))
-    
-    print("At 150 we can start removing INT whenever")
-    while(c.int > 4):
-        c.sim_ap_reset("int", 1)
-        c.add_stale_ap("str", 1)
-    print(str(c))
-    
-    print("Continue HP washing until we run out of excess MP")
-    while c.mp - 16 >= c.minimum_mp and c.level < 200:
-        c.level_up()
-        c.add_fresh_ap("hp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("str", 5)
-
-        if c.level == 185:
-            print("This is what our char will look like at 185")
-            print(str(c))
-    print(str(c))
-
-    while c.level < 200:
-        c.level_up()
-        c.add_fresh_ap("str", 5)
-
-    while c.mp - 16 >= c.minimum_mp:
-        c.sim_ap_reset("mp", 1)
-        c.add_stale_ap("str", 1)
-
-    print(str(c))
-
-
-
-
-
-
-def buccLessWork():
-    c = Character("buccaneer", 62, 3071, 1674, 185, 26, 4, 110, 5, 0, 68)
-    print(str(c))
-
-
-    start_val = 20
-    c.sim_ap_reset("str", start_val)
-    c.add_stale_ap("int", start_val)
-
-    for i in range(5):
-        # c.level_up()
-        c.add_fresh_ap("hp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("int", 5)
-    print(str(c))
-
-    for i in range(25):
-        c.level_up()
-        c.add_fresh_ap("mp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("int", 5)
-    print(str(c))
-
-    while c.mp - 16 >= c.minimum_mp and c.level < 200:
-        c.level_up()
-        c.add_fresh_ap("hp", 5)
-        c.sim_ap_reset("mp", 5)
-        c.add_stale_ap("str", 5)
-    print(str(c))
-
-    while(c.int > 4):
-        c.sim_ap_reset("int", 1)
-        c.add_stale_ap("str", 1)
-    print(str(c))
-
-    while(c.level < 200):
-        c.level_up()
-    print(str(c))
-
-
-def main():
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    buccLessWork()
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    buccTo30kPlan()
-
-if __name__ == "__main__":
-    main()
