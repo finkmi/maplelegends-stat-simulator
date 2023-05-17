@@ -19,6 +19,8 @@ class Character:
             self.lvl_up_mp_gain_limits = (22, 24)
             self.fresh_ap_hp_gain_limits = (6, 10)
             self.fresh_ap_mp_gain = 18
+            self.stale_ap_hp_gain = 6
+            self.stale_ap_mp_gain = 18
             self.mp_lost_from_resetting = 30
 
         elif self.job == "spearman" or self.job == "figher" or self.job == "page":
@@ -26,6 +28,8 @@ class Character:
             self.lvl_up_mp_gain_limits = (4, 6)
             self.fresh_ap_hp_gain_limits = (20, 24)
             self.fresh_ap_mp_gain = 2
+            self.stale_ap_hp_gain = 20
+            self.stale_ap_mp_gain = 2
             self.mp_lost_from_resetting = 4
 
         elif self.job == "buccaneer":
@@ -33,6 +37,8 @@ class Character:
             self.lvl_up_mp_gain_limits = (18, 23)
             self.fresh_ap_hp_gain_limits = (16, 20)
             self.fresh_ap_mp_gain = 14
+            self.stale_ap_hp_gain = 18
+            self.stale_ap_mp_gain = 14
             self.mp_lost_from_resetting = 16
 
         self.minimum_mp = self.calculate_minimum_mp()
@@ -79,6 +85,7 @@ class Character:
             # Improved MaxMP increase skill maxed
             if self.level >= 13:
                 self.lvl_up_mp_gain_limits = (42, 44)
+                self.fresh_ap_mp_gain = 28
 
         if self.job == "spearman":
             # Job advancement Bonus
@@ -169,9 +176,9 @@ class Character:
             elif stat == 'int':
                 self.int += 1
             elif stat == 'hp':
-                self.hp += 18
+                self.hp += self.stale_ap_hp_gain
             elif stat == 'mp':
-                self.mp += 14
+                self.mp += self.stale_ap_mp_gain
 
             self.stale_ap -= 1
 
