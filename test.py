@@ -79,7 +79,7 @@ def buccTo30kPlan():
     
 
 def NLtest():
-    c = Character("thief", 33, 1176, 798, 5, 25, 30, 126, 0, 0, 0, 60)  
+    c = Character("thief", 33, 1176, 798, 5, 25, 30, 126, 0, 0, 0, 40)  
 
     # Pump INT till 200 Base
     for i in range (15):
@@ -93,6 +93,9 @@ def NLtest():
         c.add_fresh_ap("mp", 5)
         c.sim_ap_reset("mp", 5)
         c.add_stale_ap("int", 5)
+
+        if c.level == 49:
+            print(str(c))
     print(str(c))
 
     # MP wash with AP reset going towards LUK
@@ -101,6 +104,8 @@ def NLtest():
         c.add_fresh_ap("mp", 5)
         c.sim_ap_reset("mp", 5)
         c.add_stale_ap("luk", 5)
+        if c.level == 120:
+            print(str(c))
     print(str(c))
 
     # Reset INT into LUK
@@ -127,11 +132,62 @@ def NLtest():
     print('\t5.) HP wash forever, should have enough MP to stale wash to max HP. Fresh wash when possible, stale wash when possible, can also put fresh AP directly into LUK if no NX available on level up')
 
 
+def DKtest():
+    c = Character("spearman", 41, 2284, 672, 80, 6, 4, 80, 55, 0, 0, 60)   
+    print(str(c))
+    while c.level < 135:
+        c.level_up()
+    print(str(c))
+
+    c.add_fresh_ap("hp", 1)
+    while c.mp - c.mp_lost_from_resetting > c.minimum_mp: 
+        c.sim_ap_reset("mp", 1)
+        c.add_stale_ap("hp", 1)
+    print(str(c))
+
+    while c.level < 185:
+        c.level_up()
+    print(str(c))
+
+
+def bishTest():
+    c = Character("magician", 128, 1797, 19410, 6, 4, 5, 593, 62, 0, 0, 63)
+    c.add_fresh_ap("mp", 7)
+    c.sim_ap_reset("mp", 7)
+    c.add_stale_ap("int", 7)
+
+    c.add_fresh_ap("mp", 3)
+    c.sim_ap_reset("mp", 3)
+    c.add_stale_ap("int", 3)
+    print(str(c))
+
+
+def heroTest():
+    c = Character("fighter", 1, 79, 27, 5, 5, 5, 20, 0, 0, 0, 0)
+    while c.int < 60:
+        c.level_up()
+        c.add_fresh_ap("int", 5)
+
+    print(str(c))
+
+
+    while c.level < 155:
+        if c.level == 20:
+            c.int_from_items = 20
+        c.level_up()
+        if c.level == 135:
+            print(str(c))
+
+    print(str(c))
+
 
 def main():
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    # heroTest()
     # NLtest()
     buccTo30kPlan()
+    # DKtest()
+    # bishTest()
 
 if __name__ == "__main__":
     main()

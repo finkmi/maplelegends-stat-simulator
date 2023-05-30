@@ -24,7 +24,7 @@ class Character:
             self.stale_ap_mp_gain = 18
             self.mp_lost_from_resetting = 30
 
-        elif self.job == "spearman" or self.job == "figher" or self.job == "page":
+        elif self.job == "spearman" or self.job == "fighter" or self.job == "page":
             self.lvl_up_hp_gain_limits = (24, 28)
             self.lvl_up_mp_gain_limits = (4, 6)
             self.fresh_ap_hp_gain_limits = (20, 24)
