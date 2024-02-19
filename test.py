@@ -30,6 +30,9 @@ def buccTo30kPlan():
         c.add_fresh_ap("mp", 5)
         c.sim_ap_reset("mp", 5)
         c.add_stale_ap("int", 5)
+
+        if c.level == 92:
+            print(str(c))
     print(str(c))
 
     print("From level 102 to level 150 standard HP wash moving points from MP to STR")
@@ -77,6 +80,78 @@ def buccTo30kPlan():
     print('\t4.) At 150 we can reset INT to STR')
     print('\t5.) HP wash the rest of your levels with fresh AP put into HP and APR for -MP +STR. Can get away with 27 stale washes (eg. APR -MP +HP allowing for 5 levels where fresh AP is put into STR)')
     
+def NLnon30():
+    c = Character("thief", 33, 1176, 798, 5, 25, 30, 126, 0, 0, 0, 40)  
+
+    # Pump INT till 200 Base
+    for i in range (15):
+        c.level_up()
+        c.add_fresh_ap("int", 5)
+    print(str(c))
+
+    # MP wash with AP reset going towards INT until base of 400 int
+    while c.int < 300:
+        c.level_up()
+        c.add_fresh_ap("mp", 5)
+        c.sim_ap_reset("mp", 5)
+        c.add_stale_ap("int", 5)
+
+    print(str(c))
+
+    while c.level < 175:
+        c.level_up()
+        if c.int < 400:
+            c.add_fresh_ap("int", 5)
+
+    for i in range(55):
+        c.add_fresh_ap("mp", 5)
+        c.sim_ap_reset("mp", 5)
+        c.add_stale_ap("luk", 5)
+
+    print(str(c))
+
+    c.add_fresh_ap("mp", 1)
+    
+    while(c.mp - c.mp_lost_from_resetting > c.minimum_mp):
+        c.sim_ap_reset("mp", 1)
+        c.add_stale_ap("hp", 1)
+        
+    print(str(c))
+
+    # # MP wash with AP reset going towards LUK
+    # while c.level < 150:
+    #     c.level_up()
+    #     c.add_fresh_ap("mp", 5)
+    #     c.sim_ap_reset("mp", 5)
+    #     c.add_stale_ap("luk", 5)
+    #     if c.level == 120:
+    #         print(str(c))
+    # print(str(c))
+
+    # # Reset INT into LUK
+    # while c.int > 4:
+    #     c.sim_ap_reset("int", 1)
+    #     c.add_stale_ap("luk", 1)
+    # print(str(c))
+
+    # print("At this point we have enough excess MP to fully stale HP wash (assuming we had enough NX)")
+    # print("Can do a mix of stale washes or fresh HP washes with -MP +LUK")
+
+    # c.level_up()
+    # c.add_fresh_ap("hp", 5)
+    # while c.mp - c.mp_lost_from_resetting > c.minimum_mp: 
+    #     c.sim_ap_reset("mp", 1)
+    #     c.add_stale_ap("hp", 1)
+    # print(str(c))
+
+    # print('\nWash instructions:\n')
+    # print('\t1.) Pump base INT on lvl up until 200 base INT')
+    # print('\t2.) First MP wash cycle with fresh AP put into MP then using AP reset for -MP +INT until 400 base INT')
+    # print('\t3.) Second MP wash cycle with fresh AP put into MP then using AP reset for -MP +LUK until 23150 MP')
+    # print('\t4.) At lvl 150 Reset Base INT to LUK (maybe some DEX if needed)')
+    # print('\t5.) HP wash forever, should have enough MP to stale wash to max HP. Fresh wash when possible, stale wash when possible, can also put fresh AP directly into LUK if no NX available on level up')
+
+
 
 def NLtest():
     c = Character("thief", 33, 1176, 798, 5, 25, 30, 126, 0, 0, 0, 40)  
@@ -183,8 +258,10 @@ def heroTest():
 
 def main():
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    # NLnon30()
+    NLtest()
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     # heroTest()
-    # NLtest()
     buccTo30kPlan()
     # DKtest()
     # bishTest()
